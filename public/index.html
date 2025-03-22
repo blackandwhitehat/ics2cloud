@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5227998229720934"
+     crossorigin="anonymous"></script>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📅</text></svg>"/>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ics2cloud.com - Save Your Calendar Events to the Cloud</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f7f9;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 8px;
+        }
+        
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            margin-right: 8px;
+            color: #2196F3;
+        }
+        
+        h1 {
+            font-size: 2rem;
+            color: #2196F3;
+            margin: 0;
+        }
+        
+        .tagline {
+            color: #666;
+            font-size: 1rem;
+        }
+        
+        .uploader {
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border: 2px dashed #ddd;
+            transition: all 0.3s ease;
+        }
+        
+        .uploader:hover {
+            border-color: #2196F3;
+        }
+        
+        .upload-icon {
+            font-size: 48px;
+            color: #2196F3;
+            margin-bottom: 15px;
+        }
+        
+        .upload-title {
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+            color: #2196F3;
+        }
+        
+        .upload-subtitle {
+            color: #666;
+            margin-bottom: 20px;
+        }
+        
+        #file-input {
+            display: none;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: #2196F3;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            border: none;
+            font-size: 1rem;
+            transition: background 0.3s;
+        }
+        
+        .btn:hover {
+            background: #1976D2;
+        }
+        
+        .btn-google {
+            background: #4285F4;
+        }
+        
+        .btn-google:hover {
+            background: #3367d6;
+        }
+        
+        .btn-outlook {
+            background: #0078D4;
+        }
+        
+        .btn-outlook:hover {
+            background: #106EBE;
+        }
+        
+        .status {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            color: #0d47a1;
+            text-align: center;
+        }
+        
+        .status.error {
+            background: #ffebee;
+            color: #b71c1c;
+        }
+        
+        .status.success {
+            background: #e8f5e9;
+            color: #1b5e20;
+        }
+        
+        .status.warning {
+            background: #fff8e1;
+            color: #f57f17;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .events-container {
+            margin-top: 20px;
+        }
+        
+        .events-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .select-controls {
+            display: flex;
+            align-items: center;
+        }
+        
+        .select-all {
+            margin-right: 10px;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .event-list {
+            margin-top: 20px;
+        }
+        
+        .event-group {
+            margin-bottom: 25px;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .event-group-header {
+            background: #e3f2fd;
+            padding: 12px 15px;
+            font-weight: 600;
+            color: #0d47a1;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .event-count {
+            background: white;
+            color: #0d47a1;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+        }
+        
+        .event-item {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            position: relative;
+        }
+        
+        .event-item:last-child {
+            border-bottom: none;
+        }
+        
+        .event-checkbox {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 18px;
+            height: 18px;
+        }
+        
+        .event-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+            padding-right: 30px;
+        }
+        
+        .event-details {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 5px 10px;
+            color: #666;
+        }
+        
+        .event-meta {
+            color: #999;
+            font-size: 0.9rem;
+            margin-top: 8px;
+        }
+        
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .modal.hidden {
+            display: none !important;
+            visibility: hidden !important;
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .modal-title {
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+        
+        .modal-body {
+            margin-bottom: 20px;
+        }
+        
+        .event-link-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .event-link {
+            text-align: left;
+            padding: 10px;
+        }
+        
+        .event-link.disabled {
+            opacity: 0.5;
+            cursor: default;
+        }
+        
+        .modal-footer {
+            text-align: right;
+        }
+        
+        .ad-placeholder {
+            background: #f8f9fa;
+            border: 1px dashed #ddd;
+            border-radius: 8px;
+            height: 90px;
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        @media (max-width: 768px) {
+            .action-buttons {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+            
+            .events-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .select-controls {
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Ad space - top -->
+        <div class="ad-placeholder">
+            <!-- Ad content would go here -->
+        </div>
+        
+        <header>
+            <div class="logo">
+                <span class="logo-icon">📅</span>
+                <h1>ICS2Cloud.com</h1>
+            </div>
+            <p class="tagline">Easily Import ICS files to Google or Outlook (new)!</p>
+        </header>
+        
+        <div id="uploader" class="uploader">
+            <div class="upload-icon">📤</div>
+            <h2 class="upload-title">Upload ICS Files</h2>
+            <p class="upload-subtitle">Drag and drop or click to browse</p>
+            <input type="file" id="file-input" accept=".ics" multiple />
+            <button class="btn" id="browse-btn">Browse Files</button>
+        </div>
+        
+        <div id="status" class="status hidden"></div>
+        
+        <div id="events-container" class="events-container hidden">
+            <div class="events-header">
+                <div class="select-controls">
+                    <label class="select-all">
+                        <input type="checkbox" id="select-all-checkbox"> Select all events
+                    </label>
+                    <span id="selected-count"></span>
+                </div>
+                <div class="action-buttons">
+                    <button class="btn btn-google" id="add-to-google">Add to Google Calendar</button>
+                    <button class="btn btn-outlook" id="add-to-outlook">Add to Outlook</button>
+                </div>
+            </div>
+            
+            <div id="event-list" class="event-list"></div>
+        </div>
+        
+        <!-- Ad space - bottom -->
+        <div class="ad-placeholder">
+            <!-- Ad content would go here -->
+        </div>
+    </div>
+    
+    <div id="event-modal" class="modal hidden" style="display: none !important;">
+        <div class="modal-content">
+            <h3 class="modal-title">Add Selected Events</h3>
+            <div class="modal-body">
+                <p>Click each event to add it to your calendar:</p>
+                <div id="event-links" class="event-link-list"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" id="close-modal">Close</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Run this first to ensure modal is hidden
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('event-modal').classList.add('hidden');
+            document.getElementById('event-modal').style.display = 'none';
+        });
+        
+        // DOM Elements
+        const uploader = document.getElementById('uploader');
+        const fileInput = document.getElementById('file-input');
+        const browseBtn = document.getElementById('browse-btn');
+        const status = document.getElementById('status');
+        const eventsContainer = document.getElementById('events-container');
+        const eventList = document.getElementById('event-list');
+        const selectAllCheckbox = document.getElementById('select-all-checkbox');
+        const selectedCount = document.getElementById('selected-count');
+        const addToGoogle = document.getElementById('add-to-google');
+        const addToOutlook = document.getElementById('add-to-outlook');
+        const eventModal = document.getElementById('event-modal');
+        const eventLinks = document.getElementById('event-links');
+        const closeModal = document.getElementById('close-modal');
+        
+        // Global variables
+        let files = [];
+        let events = [];
+        let selectedEvents = new Set();
+        
+        // Event listeners
+        browseBtn.addEventListener('click', () => fileInput.click());
+        uploader.addEventListener('click', (e) => {
+            if (e.target !== browseBtn) fileInput.click();
+        });
+        
+        // File input change
+        fileInput.addEventListener('change', handleFiles);
+        
+        // Drag and drop
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            uploader.addEventListener(eventName, preventDefaults, false);
+        });
+        
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+        
+        ['dragenter', 'dragover'].forEach(eventName => {
+            uploader.addEventListener(eventName, () => {
+                uploader.style.borderColor = '#2196F3';
+                uploader.style.backgroundColor = 'rgba(33, 150, 243, 0.05)';
+            });
+        });
+        
+        ['dragleave', 'drop'].forEach(eventName => {
+            uploader.addEventListener(eventName, () => {
+                uploader.style.borderColor = '#ddd';
+                uploader.style.backgroundColor = 'white';
+            });
+        });
+        
+        uploader.addEventListener('drop', (e) => {
+            const droppedFiles = e.dataTransfer.files;
+            if (droppedFiles.length > 0) {
+                fileInput.files = droppedFiles;
+                handleFiles();
+            }
+        });
+        
+        // Select all checkbox
+        selectAllCheckbox.addEventListener('change', () => {
+            const checkboxes = document.querySelectorAll('.event-checkbox');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = selectAllCheckbox.checked;
+                toggleEventSelection(checkbox.dataset.id, selectAllCheckbox.checked);
+            });
+            updateSelectedCount();
+        });
+        
+        // Add to calendar buttons
+        addToGoogle.addEventListener('click', () => {
+            if (selectedEvents.size === 0) {
+                showStatus('Please select at least one event', 'warning');
+                return;
+            }
+            openEventsInCalendar('google');
+        });
+        
+        addToOutlook.addEventListener('click', () => {
+            if (selectedEvents.size === 0) {
+                showStatus('Please select at least one event', 'warning');
+                return;
+            }
+            openEventsInCalendar('outlook');
+        });
+        
+        // Close modal button
+        closeModal.addEventListener('click', () => {
+            hideModal();
+            resetPage();
+        });
+        
+        // Click outside modal to close
+        eventModal.addEventListener('click', (e) => {
+            if (e.target === eventModal) {
+                hideModal();
+                resetPage();
+            }
+        });
+        
+        // Reset page to initial state
+        function resetPage() {
+            // Clear all events
+            eventList.innerHTML = '';
+            eventsContainer.classList.add('hidden');
+            
+            // Clear selected events
+            selectedEvents.clear();
+            
+            // Reset file input
+            fileInput.value = '';
+            
+            // Hide status message
+            status.classList.add('hidden');
+            
+            // Show uploader
+            uploader.style.display = 'block';
+        }
+        
+        // Handle files
+        function handleFiles() {
+            const fileList = fileInput.files;
+            if (fileList.length === 0) return;
+            
+            // Reset
+            files = [];
+            events = [];
+            selectedEvents.clear();
+            eventList.innerHTML = '';
+            
+            // Process each file
+            let filesProcessed = 0;
+            let totalEvents = 0;
+            
+            for (let i = 0; i < fileList.length; i++) {
+                const file = fileList[i];
+                
+                if (!file.name.endsWith('.ics')) {
+                    showStatus(`${file.name} is not a valid ICS file`, 'error');
+                    continue;
+                }
+                
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    try {
+                        const fileId = `file-${files.length}`;
+                        const fileEvents = parseICS(e.target.result);
+                        
+                        if (fileEvents.length > 0) {
+                            files.push({
+                                id: fileId,
+                                name: file.name,
+                                events: fileEvents
+                            });
+                            
+                            totalEvents += fileEvents.length;
+                            
+                            // Add these events to our global events array with proper IDs
+                            fileEvents.forEach((event, index) => {
+                                const eventId = `${fileId}-event-${index}`;
+                                events.push({
+                                    id: eventId,
+                                    fileId: fileId,
+                                    data: event
+                                });
+                            });
+                        }
+                    } catch (err) {
+                        console.error(err);
+                        showStatus(`Error parsing ${file.name}: ${err.message}`, 'error');
+                    }
+                    
+                    filesProcessed++;
+                    
+                    // When all files are processed, display the events
+                    if (filesProcessed === fileList.length) {
+                        if (totalEvents > 0) {
+                            displayEvents();
+                            showStatus(`Loaded ${totalEvents} events from ${files.length} file(s)`, 'success');
+                        } else {
+                            showStatus('No events found in the uploaded files', 'warning');
+                        }
+                    }
+                };
+                
+                reader.onerror = function() {
+                    filesProcessed++;
+                    showStatus(`Error reading ${file.name}`, 'error');
+                };
+                
+                reader.readAsText(file);
+            }
+        }
+        
+        // Parse ICS
+        function parseICS(icsData) {
+            const lines = icsData.split(/\r\n|\n|\r/);
+            const events = [];
+            let currentEvent = null;
+            
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i].trim();
+                
+                // Handle line folding (continued lines)
+                let j = i + 1;
+                while (j < lines.length && (lines[j].startsWith(' ') || lines[j].startsWith('\t'))) {
+                    line += lines[j].trim();
+                    i = j;
+                    j++;
+                }
+                
+                if (line === 'BEGIN:VEVENT') {
+                    currentEvent = {
+                        summary: '',
+                        description: '',
+                        location: '',
+                        start: '',
+                        end: '',
+                        startRaw: '',
+                        endRaw: ''
+                    };
+                } else if (line === 'END:VEVENT' && currentEvent) {
+                    events.push(currentEvent);
+                    currentEvent = null;
+                } else if (currentEvent) {
+                    const colonIndex = line.indexOf(':');
+                    if (colonIndex > 0) {
+                        const key = line.substring(0, colonIndex);
+                        const value = line.substring(colonIndex + 1);
+                        
+                        // Handle common properties
+                        if (key === 'SUMMARY') {
+                            currentEvent.summary = value;
+                        } else if (key === 'DESCRIPTION') {
+                            currentEvent.description = value;
+                        } else if (key === 'LOCATION') {
+                            currentEvent.location = value;
+                        } else if (key.includes('DTSTART')) {
+                            currentEvent.startRaw = value;
+                            currentEvent.start = formatICSDate(value);
+                        } else if (key.includes('DTEND')) {
+                            currentEvent.endRaw = value;
+                            currentEvent.end = formatICSDate(value);
+                        }
+                    }
+                }
+            }
+            
+            return events;
+        }
+        
+        // Format ICS date for display
+        function formatICSDate(icsDate) {
+            // Handle basic format: YYYYMMDDTHHMMSS
+            if (icsDate.length >= 15) {
+                try {
+                    const year = icsDate.substr(0, 4);
+                    const month = icsDate.substr(4, 2);
+                    const day = icsDate.substr(6, 2);
+                    const hour = icsDate.substr(9, 2);
+                    const minute = icsDate.substr(11, 2);
+                    
+                    const date = new Date(`${year}-${month}-${day}T${hour}:${minute}:00`);
+                    return date.toLocaleString();
+                } catch (e) {
+                    return icsDate;
+                }
+            }
+            return icsDate;
+        }
+        
+        // Extract date and time separately
+        function extractDateTime(dateTimeStr) {
+            try {
+                const parts = dateTimeStr.split(', ');
+                return {
+                    date: parts[0],
+                    time: parts[1]
+                };
+            } catch (e) {
+                return {
+                    date: dateTimeStr,
+                    time: ''
+                };
+            }
+        }
+        
+        // Display events
+        function displayEvents() {
+            eventList.innerHTML = '';
+            
+            // Group by file
+            const fileGroups = {};
+            
+            files.forEach(file => {
+                fileGroups[file.id] = {
+                    name: file.name,
+                    events: []
+                };
+            });
+            
+            events.forEach(event => {
+                fileGroups[event.fileId].events.push(event);
+            });
+            
+            // Create DOM elements for each file group
+            Object.keys(fileGroups).forEach(fileId => {
+                const group = fileGroups[fileId];
+                
+                const groupEl = document.createElement('div');
+                groupEl.className = 'event-group';
+                
+                const header = document.createElement('div');
+                header.className = 'event-group-header';
+                header.innerHTML = `
+                    <div>${group.name}</div>
+                    <div class="event-count">${group.events.length} events</div>
+                `;
+                
+                groupEl.appendChild(header);
+                
+                // Add each event
+                group.events.forEach(event => {
+                    const eventData = event.data;
+                    const eventEl = document.createElement('div');
+                    eventEl.className = 'event-item';
+                    
+                    // Extract date and time
+                    const start = extractDateTime(eventData.start);
+                    const end = extractDateTime(eventData.end);
+                    
+                    // Create event content - all events are checked by default
+                    eventEl.innerHTML = `
+                        <input type="checkbox" class="event-checkbox" data-id="${event.id}" checked>
+                        <div class="event-title">${eventData.summary || 'Untitled Event'}</div>
+                        <div class="event-details">
+                            ${start.date ? `<div>📅</div><div>${start.date}</div>` : ''}
+                            ${start.time ? `<div>⏰</div><div>${start.time}${end.time ? ` - ${end.time}` : ''}</div>` : ''}
+                            ${eventData.location ? `<div>📍</div><div>${eventData.location}</div>` : ''}
+                        </div>
+                        ${eventData.description ? `<div class="event-meta">${eventData.description.length > 100 ? eventData.description.substring(0, 100) + '...' : eventData.description}</div>` : ''}
+                    `;
+                    
+                    groupEl.appendChild(eventEl);
+                    
+                    // Add event listener to checkbox
+                    const checkbox = eventEl.querySelector('.event-checkbox');
+                    checkbox.addEventListener('change', () => {
+                        toggleEventSelection(event.id, checkbox.checked);
+                        updateSelectedCount();
+                        updateSelectAllCheckbox();
+                    });
+                    
+                    // Add to selected events by default
+                    toggleEventSelection(event.id, true);
+                });
+                
+                eventList.appendChild(groupEl);
+            });
+            
+            // Show events container
+            eventsContainer.classList.remove('hidden');
+            updateSelectedCount();
+            
+            // Select all checkbox should be checked by default
+            selectAllCheckbox.checked = true;
+            
+            // Show success message
+            showStatus('All events are selected by default. Click "Add to Google Calendar" or "Add to Outlook" to continue.', 'success');
+        }
+        
+        // Toggle event selection
+        function toggleEventSelection(eventId, isSelected) {
+            if (isSelected) {
+                selectedEvents.add(eventId);
+            } else {
+                selectedEvents.delete(eventId);
+            }
+            
+            // Check if all events are selected
+            const allCheckboxes = document.querySelectorAll('.event-checkbox');
+            const allChecked = document.querySelectorAll('.event-checkbox:checked').length === allCheckboxes.length;
+            
+            if (allChecked && allCheckboxes.length > 0) {
+                showStatus('Thank you!', 'success');
+            }
+        }
+        
+        // Update selected count display
+        function updateSelectedCount() {
+            selectedCount.textContent = selectedEvents.size > 0 ? 
+                `(${selectedEvents.size} selected)` : '';
+        }
+        
+        // Update select all checkbox state
+        function updateSelectAllCheckbox() {
+            const checkboxes = document.querySelectorAll('.event-checkbox');
+            const checkedCount = document.querySelectorAll('.event-checkbox:checked').length;
+            
+            selectAllCheckbox.checked = checkboxes.length > 0 && checkedCount === checkboxes.length;
+            selectAllCheckbox.indeterminate = checkedCount > 0 && checkedCount < checkboxes.length;
+        }
+        
+        // Open events in calendar
+        function openEventsInCalendar(service) {
+            if (selectedEvents.size === 0) return;
+            
+            const eventUrls = [];
+            
+            // Get URLs for all selected events
+            selectedEvents.forEach(eventId => {
+                const event = events.find(e => e.id === eventId);
+                if (!event) return;
+                
+                const eventData = event.data;
+                let url;
+                
+                if (service === 'google') {
+                    url = createGoogleCalendarUrl(eventData);
+                } else {
+                    url = createOutlookCalendarUrl(eventData);
+                }
+                
+                eventUrls.push({
+                    id: event.id,
+                    title: eventData.summary || 'Untitled Event',
+                    url: url
+                });
+            });
+            
+            if (eventUrls.length === 0) return;
+            
+            // Open first event directly
+            window.open(eventUrls[0].url, '_blank');
+            
+            // If there are more events, show modal
+            if (eventUrls.length > 1) {
+                showEventModal(eventUrls.slice(1), service);
+            }
+        }
+        
+        // Show event modal
+        function showEventModal(events, service) {
+            // Set modal title
+            document.querySelector('.modal-title').textContent = 
+                `Add ${events.length} More Events to ${service === 'google' ? 'Google Calendar' : 'Outlook'}`;
+            
+            // Create links for each event
+            eventLinks.innerHTML = '';
+            events.forEach((event, index) => {
+                const button = document.createElement('button');
+                button.className = 'btn event-link';
+                button.className += service === 'google' ? ' btn-google' : ' btn-outlook';
+                button.textContent = `${index + 1}. ${event.title}`;
+                button.dataset.url = event.url;
+                
+                button.addEventListener('click', function() {
+                    window.open(this.dataset.url, '_blank');
+                    this.disabled = true;
+                    this.classList.add('disabled');
+                    this.textContent = `✓ ${event.title}`;
+                    
+                    // Check if all events have been clicked
+                    const allButtons = eventLinks.querySelectorAll('.event-link');
+                    const allClicked = Array.from(allButtons).every(btn => btn.disabled);
+                    
+                    if (allClicked) {
+                        // Replace the event list with a thank you message
+                        setTimeout(() => {
+                            const modalBody = document.querySelector('.modal-body');
+                            modalBody.innerHTML = `
+                                <div class="thank-you-message">
+                                    <h2 style="color: #4CAF50; text-align: center; margin: 20px 0;">Thank you!</h2>
+                                    <p style="text-align: center;">All events have been added to your calendar.</p>
+                                </div>
+                            `;
+                        }, 500);
+                    }
+                });
+                
+                eventLinks.appendChild(button);
+            });
+            
+            // Show modal - use multiple techniques to ensure it shows
+            eventModal.classList.remove('hidden');
+            eventModal.style.removeProperty('display');
+            eventModal.style.visibility = 'visible';
+        }
+        
+        // Close modal function
+        function hideModal() {
+            eventModal.classList.add('hidden');
+            eventModal.style.display = 'none';
+            eventModal.style.visibility = 'hidden';
+        }
+        
+        // Create Google Calendar URL
+        function createGoogleCalendarUrl(event) {
+            const baseUrl = 'https://www.google.com/calendar/render';
+            const params = new URLSearchParams({
+                action: 'TEMPLATE',
+                text: event.summary || 'Event',
+                dates: `${event.startRaw}/${event.endRaw}`,
+                details: event.description || '',
+                location: event.location || '',
+                ctz: Intl.DateTimeFormat().resolvedOptions().timeZone
+            });
+            
+            return `${baseUrl}?${params.toString()}`;
+        }
+        
+        // Create Outlook Calendar URL
+        function createOutlookCalendarUrl(event) {
+            // Format the dates for Outlook
+            function formatOutlookDate(dateStr) {
+                if (dateStr.length >= 15) {
+                    const year = dateStr.substr(0, 4);
+                    const month = dateStr.substr(4, 2);
+                    const day = dateStr.substr(6, 2);
+                    const hour = dateStr.substr(9, 2);
+                    const minute = dateStr.substr(11, 2);
+                    const second = dateStr.substr(13, 2) || '00';
+                    
+                    return `${year}-${month}-${day}T${hour}:${minute}:${second}`;
+                }
+                return dateStr;
+            }
+            
+            const startDate = formatOutlookDate(event.startRaw);
+            const endDate = formatOutlookDate(event.endRaw);
+            
+            const baseUrl = 'https://outlook.office.com/calendar/0/deeplink/compose';
+            const params = new URLSearchParams({
+                subject: event.summary || 'Event',
+                startdt: startDate,
+                enddt: endDate,
+                body: event.description || '',
+                location: event.location || ''
+            });
+            
+            return `${baseUrl}?${params.toString()}`;
+        }
+        
+        // Show status message
+        function showStatus(message, type = 'info') {
+            status.textContent = message;
+            status.className = 'status';
+            if (type) status.classList.add(type);
+            status.classList.remove('hidden');
+            
+            // Auto-hide success and info messages after 5 seconds
+            if (type === 'success' || type === 'info') {
+                setTimeout(() => {
+                    status.classList.add('hidden');
+                }, 5000);
+            }
+        }
+    </script>
+</body>
+</html>
